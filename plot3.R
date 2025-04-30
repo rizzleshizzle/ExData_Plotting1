@@ -1,0 +1,22 @@
+# Set working directory
+
+# plot3.R
+
+# Load and filter data
+data <- read.table("household_power_consumption.txt", header = TRUE, sep = ";",
+                   stringsAsFactors = FALSE, na.strings = "?")
+data$Date <- as.Date(data$Date, format = "%d/%m/%Y")
+subdata <- subset(data, Date == as.Date("2007-02-01") | Date == as.Date("2007-02-02"))
+
+# Combine Date and Time
+subdata$DateTime <- as.POSIXct(paste(subdata$Date, subdata$Time))
+
+# Plot and save PNG
+png("plot3.png", width = 480, height = 480)
+plot(subdata$DateTime, subdata$Sub_metering_1, type = "l", col = "black",
+     xlab = "", ylab = "Energy sub metering")
+lines(subdata$DateTime, subdata$Sub_metering_2, col = "red")
+lines(subdata$DateTime, subdata$Sub_metering_3, col = "blue")
+legend("topright", legend = c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"),
+       col = c("black", "red", "blue"), lty = 1)
+dev.off()
